@@ -1,0 +1,1646 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Authentication API",
+        "description": "API for user authentication and registration",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "description": "Register a new user with customer role",
+                "operationId": "register",
+                "requestBody": {
+                    "description": "User registration data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama",
+                                    "email",
+                                    "password",
+                                    "nomor_telepon"
+                                ],
+                                "properties": {
+                                    "nama": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255,
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 6,
+                                        "example": "password123"
+                                    },
+                                    "nomor_telepon": {
+                                        "type": "string",
+                                        "maxLength": 15,
+                                        "example": "08123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "nama": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "peran": {
+                                                    "type": "string",
+                                                    "example": "pelanggan"
+                                                },
+                                                "nomor_telepon": {
+                                                    "type": "string",
+                                                    "example": "08123456789"
+                                                },
+                                                "foto_profil": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "The email field is required."
+                                                ],
+                                                "password": [
+                                                    "The password must be at least 6 characters."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Registration failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error details"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Authenticate user",
+                "description": "Login user with email and password",
+                "operationId": "login",
+                "requestBody": {
+                    "description": "User credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "nama": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "peran": {
+                                                    "type": "string",
+                                                    "example": "pelanggan"
+                                                },
+                                                "nomor_telepon": {
+                                                    "type": "string",
+                                                    "example": "08123456789"
+                                                },
+                                                "foto_profil": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "invalid_credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "could_not_create_token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout user",
+                "description": "Invalidate the JWT token",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get authenticated user data",
+                "description": "Get data of the currently authenticated user",
+                "operationId": "me",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "nama": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "peran": {
+                                                    "type": "string",
+                                                    "example": "pelanggan"
+                                                },
+                                                "nomor_telepon": {
+                                                    "type": "string",
+                                                    "example": "08123456789"
+                                                },
+                                                "foto_profil": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh JWT token",
+                "description": "Refresh the expired JWT token",
+                "operationId": "refreshToken",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/operator/rute": {
+            "get": {
+                "tags": [
+                    "Operator Rute"
+                ],
+                "summary": "Dapatkan semua rute",
+                "operationId": "getAllRute",
+                "responses": {
+                    "200": {
+                        "description": "Sukses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Rute"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Operator Rute"
+                ],
+                "summary": "Buat rute baru",
+                "operationId": "createRute",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama_rute",
+                                    "titik_awal",
+                                    "koordinat_awal",
+                                    "titik_akhir",
+                                    "koordinat_akhir",
+                                    "path"
+                                ],
+                                "properties": {
+                                    "nama_rute": {
+                                        "type": "string",
+                                        "example": "Rute B"
+                                    },
+                                    "titik_awal": {
+                                        "type": "string",
+                                        "example": "Stasiun"
+                                    },
+                                    "koordinat_awal": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 106.1111
+                                        }
+                                    },
+                                    "titik_akhir": {
+                                        "type": "string",
+                                        "example": "Bandara"
+                                    },
+                                    "koordinat_akhir": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 106.9999
+                                        }
+                                    },
+                                    "path": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number",
+                                                "format": "float"
+                                            }
+                                        },
+                                        "example": [
+                                            [
+                                                106.1111,
+                                                -6.1111
+                                            ],
+                                            [
+                                                106.2222,
+                                                -6.2222
+                                            ],
+                                            [
+                                                106.9999,
+                                                -6.9999
+                                            ]
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Rute created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rute created"
+                                        },
+                                        "rute": {
+                                            "$ref": "#/components/schemas/Rute"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/operator/rute/{id}": {
+            "get": {
+                "tags": [
+                    "Operator Rute"
+                ],
+                "summary": "Dapatkan detail rute",
+                "operationId": "getRuteDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Rute",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sukses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Rute"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Rute tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Operator Rute"
+                ],
+                "summary": "Update rute",
+                "operationId": "updateRute",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Rute",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nama_rute": {
+                                        "type": "string",
+                                        "example": "Rute B Updated"
+                                    },
+                                    "titik_awal": {
+                                        "type": "string",
+                                        "example": "Stasiun Utama"
+                                    },
+                                    "koordinat_awal": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 106.1112
+                                        }
+                                    },
+                                    "titik_akhir": {
+                                        "type": "string",
+                                        "example": "Bandara Internasional"
+                                    },
+                                    "koordinat_akhir": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 106.9998
+                                        }
+                                    },
+                                    "path": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number",
+                                                "format": "float"
+                                            }
+                                        },
+                                        "example": [
+                                            [
+                                                106.1111,
+                                                -6.1111
+                                            ],
+                                            [
+                                                106.2223,
+                                                -6.2223
+                                            ],
+                                            [
+                                                106.9999,
+                                                -6.9999
+                                            ]
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sukses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rute updated successfully"
+                                        },
+                                        "rute": {
+                                            "$ref": "#/components/schemas/Rute"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Rute tidak ditemukan"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Operator Rute"
+                ],
+                "summary": "Hapus rute",
+                "operationId": "deleteRute",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Rute",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sukses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rute deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Rute tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/rute/nearby": {
+            "get": {
+                "tags": [
+                    "Pencarian"
+                ],
+                "summary": "Cari rute terdekat berdasarkan lokasi",
+                "operationId": "findNearbyRoutes",
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "Latitude lokasi pengguna",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float",
+                            "example": -6.1234
+                        }
+                    },
+                    {
+                        "name": "lng",
+                        "in": "query",
+                        "description": "Longitude lokasi pengguna",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float",
+                            "example": 106.1234
+                        }
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "Radius pencarian dalam meter",
+                        "schema": {
+                            "type": "number",
+                            "format": "float",
+                            "example": 500
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sukses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/NearbyRute"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                }
+            }
+        },
+        "/booking": {
+            "get": {
+                "tags": [
+                    "Pelanggan - Booking"
+                ],
+                "summary": "Daftar Booking Pelanggan",
+                "description": "Mendapatkan daftar booking milik pelanggan yang sedang login",
+                "operationId": "6522e341c6397323a42900d88750dee7",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter berdasarkan status booking",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "menunggu_acc",
+                                "dikonfirmasi",
+                                "dibatalkan",
+                                "selesai"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mendapatkan data booking",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BookingFormat"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pelanggan - Booking"
+                ],
+                "summary": "Buat Booking Baru",
+                "description": "Membuat booking baru untuk pelanggan",
+                "operationId": "abc46565360d5ff099d55da75ace5de7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_jadwal",
+                                    "tanggal_booking",
+                                    "waktu_booking",
+                                    "lokasi_jemput",
+                                    "jumlah_kursi"
+                                ],
+                                "properties": {
+                                    "id_jadwal": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "tanggal_booking": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2023-12-31"
+                                    },
+                                    "waktu_booking": {
+                                        "type": "string",
+                                        "format": "time",
+                                        "example": "14:30:00"
+                                    },
+                                    "lokasi_jemput": {
+                                        "description": "[Longitude, Latitude]",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 106.816666
+                                        }
+                                    },
+                                    "jumlah_kursi": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Booking berhasil dibuat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking created"
+                                        },
+                                        "booking": {
+                                            "$ref": "#/components/schemas/BookingFormat"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "example": {
+                                                "field": [
+                                                    "Error message"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Kursi tidak tersedia",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Tidak cukup kursi tersedia"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/booking/{id}": {
+            "get": {
+                "tags": [
+                    "Pelanggan - Booking"
+                ],
+                "summary": "Detail Booking",
+                "description": "Mendapatkan detail booking milik pelanggan",
+                "operationId": "951b1038e07cf4bbbc6699b297f6ac97",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Booking",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mendapatkan detail booking",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookingFormat"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Booking tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/booking/{id}/cancel": {
+            "put": {
+                "tags": [
+                    "Pelanggan - Booking"
+                ],
+                "summary": "Batalkan Booking",
+                "description": "Membatalkan booking yang masih menunggu konfirmasi",
+                "operationId": "619022facfca8a154547817dfaceeff9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Booking",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Booking berhasil dibatalkan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking canceled"
+                                        },
+                                        "booking": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "dibatalkan"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Booking tidak ditemukan atau tidak bisa dibatalkan"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/booking/{id}/pay": {
+            "post": {
+                "tags": [
+                    "Pelanggan - Booking"
+                ],
+                "summary": "Konfirmasi Pembayaran",
+                "description": "Konfirmasi pembayaran untuk booking yang sudah dibuat",
+                "operationId": "0d57767a4adc5ee8dd08a335cfa35a0c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Booking",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pembayaran berhasil dikonfirmasi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment confirmed"
+                                        },
+                                        "booking": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "pembayaran_status": {
+                                                    "type": "string",
+                                                    "example": "sudah_bayar"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Booking tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Dapatkan profil pengguna yang login",
+                "operationId": "4373251f8140344279ac32a1ac817cef",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Tidak terotentikasi"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/update": {
+            "post": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Update profil pengguna",
+                "operationId": "7faf5fc8bc6221be8008f8c86a260225",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "nama": {
+                                        "type": "string",
+                                        "example": "John Updated"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.new@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    },
+                                    "nomor_telepon": {
+                                        "type": "string",
+                                        "example": "081234567899"
+                                    },
+                                    "foto_profil": {
+                                        "description": "File gambar (max 2MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User updated successfully"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "Email sudah digunakan"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Tidak terotentikasi"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Point": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "example": "Point"
+                    },
+                    "coordinates": {
+                        "type": "array",
+                        "items": {
+                            "type": "number",
+                            "format": "float",
+                            "example": 106.1234
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "LineString": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "example": "LineString"
+                    },
+                    "coordinates": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "number",
+                                "format": "float"
+                            }
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Rute": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nama_rute": {
+                        "type": "string",
+                        "example": "Rute A"
+                    },
+                    "titik_awal": {
+                        "type": "string",
+                        "example": "Pasar"
+                    },
+                    "koordinat_awal": {
+                        "$ref": "#/components/schemas/Point"
+                    },
+                    "titik_akhir": {
+                        "type": "string",
+                        "example": "Terminal"
+                    },
+                    "koordinat_akhir": {
+                        "$ref": "#/components/schemas/Point"
+                    },
+                    "path": {
+                        "$ref": "#/components/schemas/LineString"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-01T12:00:00.000000Z"
+                    }
+                },
+                "type": "object"
+            },
+            "NearbyRute": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nama_rute": {
+                        "type": "string",
+                        "example": "Rute A"
+                    },
+                    "titik_awal": {
+                        "type": "string",
+                        "example": "Pasar"
+                    },
+                    "titik_akhir": {
+                        "type": "string",
+                        "example": "Terminal"
+                    },
+                    "jarak": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 250
+                    }
+                },
+                "type": "object"
+            },
+            "BookingFormat": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "id_jadwal": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "tanggal_booking": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-12-31"
+                    },
+                    "waktu_booking": {
+                        "type": "string",
+                        "format": "time",
+                        "example": "14:30:00"
+                    },
+                    "lokasi_jemput": {
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "example": "Point"
+                            },
+                            "coordinates": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number",
+                                    "example": 106.816666
+                                }
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "jumlah_kursi": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "menunggu_acc",
+                            "dikonfirmasi",
+                            "dibatalkan",
+                            "selesai"
+                        ],
+                        "example": "menunggu_acc"
+                    },
+                    "pembayaran_status": {
+                        "type": "string",
+                        "enum": [
+                            "belum_bayar",
+                            "sudah_bayar"
+                        ],
+                        "example": "belum_bayar"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "jadwal": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 5
+                            },
+                            "tarif": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 15000
+                            },
+                            "tanggal": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2023-12-31"
+                            },
+                            "waktu_berangkat": {
+                                "type": "string",
+                                "format": "time",
+                                "example": "08:00:00"
+                            },
+                            "estimasi_sampai": {
+                                "type": "string",
+                                "format": "time",
+                                "example": "10:00:00"
+                            },
+                            "rute": {
+                                "properties": {
+                                    "nama_rute": {
+                                        "type": "string",
+                                        "example": "Cicaheum - Leuwi Panjang"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "angkot": {
+                                "properties": {
+                                    "plat_nomor": {
+                                        "type": "string",
+                                        "example": "D 1234 ABC"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "id",
+                    "nama",
+                    "email",
+                    "peran",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nama": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "peran": {
+                        "type": "string",
+                        "example": "pelanggan"
+                    },
+                    "nomor_telepon": {
+                        "type": "string",
+                        "example": "081234567890",
+                        "nullable": true
+                    },
+                    "foto_profil": {
+                        "type": "string",
+                        "example": "http://example.com/storage/profile.jpg",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "Authorization",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Operator Rute",
+            "description": "Operasi manajemen rute untuk operator"
+        },
+        {
+            "name": "Pelanggan - Booking",
+            "description": "Manajemen Booking Pelanggan"
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Pencarian",
+            "description": "Pencarian"
+        },
+        {
+            "name": "Pengguna",
+            "description": "Pengguna"
+        }
+    ]
+}
